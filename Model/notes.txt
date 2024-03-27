@@ -7,3 +7,8 @@ starting lr: 0.001
 
 v2 --->
 # Replace one more kernel from 3x3 to 5x5 #
+Epoch 75/75
+loss: __ - accuracy: 0.9675 -
+val_loss: 0.5997 - val_accuracy: 0.9000 -
+lr: 1.0000e-04 -
+starting lr: 0.001
