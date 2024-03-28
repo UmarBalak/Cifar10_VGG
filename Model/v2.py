@@ -24,21 +24,6 @@ class OptimizedCIFAR10CNN:
         else:
             self.model_1.load_model('optimized_cifar10_test_2.keras')
 
-    def store_training_history(self, epoch, history, history_df=None):
-      if history_df is None:
-          history_df = pd.DataFrame(columns=['epoch', 'loss', 'accuracy', 'val_loss', 'val_accuracy', 'lr', 'time_per_epoch', 'time_per_step'])
-
-      history_df = history_df.append({
-          'epoch': epoch,
-          'loss': history.history['loss'][0],
-          'accuracy': history.history['accuracy'][0],
-          'val_loss': history.history['val_loss'][0],
-          'val_accuracy': history.history['val_accuracy'][0],
-          'lr': history.history['lr'][0],
-      }, ignore_index=True)
-
-      return history_df
-
     def plot_training_history(self, history):
         """
         Plot the training history including training loss, validation loss,
@@ -79,26 +64,27 @@ class OptimizedCIFAR10CNN:
                          input_shape=self.x_shape))
         model_1.add(Activation('relu'))
         model_1.add(BatchNormalization())
+        model_1.add(Dropout(0.3))
         model_1.add(Conv2D(64, (3, 3), padding='same', kernel_regularizer=keras.regularizers.l2(weight_decay)))
         model_1.add(Activation('relu'))
         model_1.add(BatchNormalization())
         model_1.add(MaxPooling2D(pool_size=(2, 2)))
-        model_1.add(Dropout(0.25))
 
-        model_1.add(Conv2D(128, (5, 5), padding='same', kernel_regularizer=keras.regularizers.l2(weight_decay)))
-        model_1.add(Activation('relu'))
-        model_1.add(BatchNormalization())
         model_1.add(Conv2D(128, (3, 3), padding='same', kernel_regularizer=keras.regularizers.l2(weight_decay)))
         model_1.add(Activation('relu'))
         model_1.add(BatchNormalization())
-        model_1.add(Conv2D(256, (5, 5), padding='same', kernel_regularizer=keras.regularizers.l2(weight_decay)))
+        model_1.add(Dropout(0.4))
+        model_1.add(Conv2D(128, (3, 3), padding='same', kernel_regularizer=keras.regularizers.l2(weight_decay)))
+        model_1.add(Activation('relu'))
+        model_1.add(BatchNormalization())
+        model_1.add(Conv2D(256, (3, 3), padding='same', kernel_regularizer=keras.regularizers.l2(weight_decay)))
         model_1.add(Activation('relu'))
         model_1.add(BatchNormalization())
         model_1.add(MaxPooling2D(pool_size=(2, 2)))
-        model_1.add(Dropout(0.25))
+        model_1.add(Dropout(0.4))
 
         model_1.add(Flatten())
-        model_1.add(Dense(1024, kernel_regularizer=keras.regularizers.l2(weight_decay)))
+        model_1.add(Dense(256, kernel_regularizer=keras.regularizers.l2(weight_decay)))
         model_1.add(Activation('relu'))
         model_1.add(BatchNormalization())
         model_1.add(Dropout(0.5))
@@ -137,9 +123,9 @@ class OptimizedCIFAR10CNN:
 
 
     def train(self, model_1):
-        model_name = 'optimized_cifar10_v1'
+        model_name = 'optimized_cifar10_v2'
         batch_size = 128 # original 64
-        max_epochs = 75 # original 100
+        max_epochs = 150 # original 100
         learning_rate = 0.001 # original 0.01 , good - 0.005
         lr_decay = 1e-6 # 1e-6
         lr_drop = 20
@@ -152,8 +138,8 @@ class OptimizedCIFAR10CNN:
         y_train = keras.utils.to_categorical(y_train, self.num_classes)
         y_test = keras.utils.to_categorical(y_test, self.num_classes)
 
-        reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.7,
-                              patience=2, min_lr=0.0001)
+        reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.75,
+                              patience=3, min_lr=0.00001)
         early_stop = keras.callbacks.EarlyStopping(monitor='val_loss',
                                                    start_from_epoch=5,
                                                    patience=3)
@@ -184,14 +170,8 @@ class OptimizedCIFAR10CNN:
         # Plot training history
         self.plot_training_history(history)
 
-        # Store training history
-        history_df = self.store_training_history(max_epochs, history)
-
-        # Save training history to a CSV file
-        history_df.to_csv(f"{model_name}.csv", index=False)
-
         model_1.save(f"{model_name}.keras")
-        return model_1, history_df
+        return model_1
 
 if __name__ == '__main__':
     (x_train, y_train), (x_test, y_test) = cifar10.load_data()
@@ -202,10 +182,20 @@ if __name__ == '__main__':
     y_test = keras.utils.to_categorical(y_test, 10)
 
     # Train the model
-    model_1, hist_df = OptimizedCIFAR10CNN()
+    model_1 = OptimizedCIFAR10CNN()
 
     predicted_x = model_1.predict(x_test)
     residuals = np.argmax(predicted_x, 1) != np.argmax(y_test, 1)
 
     loss = sum(residuals) / len(residuals)
     print("The validation 0/1 loss is: ", loss)
+
+    # Convert predicted probabilities to predicted labels
+    y_pred = np.argmax(predicted_x, axis=1)
+
+    # Convert one-hot encoded true labels back to class labels
+    y_true = np.argmax(y_test, axis=1)
+
+    # Calculate test accuracy
+    test_accuracy = np.mean(y_pred == y_true)
+    print("Test Accuracy:", test_accuracy)

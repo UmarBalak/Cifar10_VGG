@@ -1,19 +1,21 @@
-v1 --->
-Epoch 46/50
-loss: 0.4242 - accuracy: 0.9475 -
-val_loss: 0.5997 - val_accuracy: 0.9000 -
-lr: 1.0000e-04 -
-starting lr: 0.001
+cifar10vgg -->
+epochs: 250
+loss: 0.2426 - accuracy: 0.9847 - val_loss: 0.4706 - val_accuracy: 0.9334
+Total params: 15001418 (57.23 MB)
+Trainable params: 14991946 (57.19 MB)
+Non-trainable params: 9472 (37.00 KB)
 
-v2 --->
-# Replace one more kernel from 3x3 to 5x5 #
-Epoch 75/75
-loss: __ - accuracy: 0.9675 -
-val_loss: 0.5997 - val_accuracy: 0.9000 -
-lr: 1.0000e-04 -
-starting lr: 0.001
 
-final -->
+v1 -->
 Total params: 9609546 (36.66 MB)
 Trainable params: 9607242 (36.65 MB)
 Non-trainable params: 2304 (9.00 KB)
+
+
+v2 -->
+epochs: 150
+loss: 0.3110 - accuracy: 0.9452 - val_loss: 0.4183 - val_accuracy: 0.9207
+Test Accuracy: 0.9207
+Total params: 4756042 (18.14 MB)
+Trainable params: 4754250 (18.14 MB)
+Non-trainable params: 1792 (7.00 KB)
