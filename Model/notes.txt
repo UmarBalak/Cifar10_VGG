@@ -28,3 +28,11 @@ Test Accuracy: 0.9144
 Total params: 2510794 (9.58 MB)
 Trainable params: 2509258 (9.57 MB)
 Non-trainable params: 1536 (6.00 KB)
+
+v4 -->
+epochs: 150
+loss: 0.2799 - accuracy: 0.9459 - val_loss: 0.3837 - val_accuracy: 0.9197
+Test Accuracy: 0.9197
+Total params: 1086026 (4.14 MB)
+Trainable params: 1084234 (4.14 MB)
+Non-trainable params: 1792 (7.00 KB)
