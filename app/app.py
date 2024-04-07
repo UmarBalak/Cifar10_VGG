@@ -118,11 +118,11 @@ def diff_layer_dist(categories, values1, values2):
             y=1.0,
             bgcolor='rgba(255, 255, 255, 0)',
             bordercolor='rgba(255, 255, 255, 0)',
-            traceorder='reversed'  # Change the order of legend names
+            traceorder='reversed'  
         ),
         barmode='group',
-        bargap=0.15,  # gap between bars of adjacent location coordinates.
-        bargroupgap=0.07  # gap between bars of the same location coordinate.
+        bargap=0.15,  
+        bargroupgap=0.07  
     )
     return fig
 
@@ -201,12 +201,9 @@ def main(confusion_matrix, accuracy, precision_per_class, layer_distribution):
         st.markdown("<h2 style='text-align: center; color: #000000;'>Model Performance</h2>", unsafe_allow_html=True)
         st.write("<div style='margin: 40px;'></div>", unsafe_allow_html=True)
 
-        # Create dashboard layout with additional subplot
         fig_confusion_matrix = plot_confusion_matrix(confusion_matrix)
         fig_accuracy_per_class = plot_accuracy_per_class(confusion_matrix)
         fig_precision_recall_f1 = plot_precision_recall_f1(precision_per_class, recall_per_class, f1_per_class)
-
-
 
         cols = st.columns(4)
         with cols[0]:
@@ -282,8 +279,6 @@ def main(confusion_matrix, accuracy, precision_per_class, layer_distribution):
         </style>
         """
         
-
-        # Apply CSS styling
         st.write(css, unsafe_allow_html=True)
 
         e1, c1, e2 = st.columns((1, 7, 1))
