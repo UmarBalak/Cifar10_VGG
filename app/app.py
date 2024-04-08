@@ -194,6 +194,10 @@ def main(confusion_matrix, accuracy, precision_per_class, layer_distribution):
                         The architecture is implemented using the TensorFlow/Keras framework,
                             with additional layers such as batch normalization and dropout included to improve model performance and generalization.
                         </p>''', unsafe_allow_html=True)
+            
+            st.write("<div style='margin: 40px;'></div>", unsafe_allow_html=True)
+            image_url = 'TinyVGG-Architecture.png'
+            st.image(image_url, caption='TinyVGG Architecture', use_column_width=True)
 
 
 
