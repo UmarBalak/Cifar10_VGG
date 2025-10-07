@@ -1,3 +1,3 @@
-# Cifar10_VGG
+# TinyVGG
 
 Check out: `https://tinyvgg.streamlit.app`
